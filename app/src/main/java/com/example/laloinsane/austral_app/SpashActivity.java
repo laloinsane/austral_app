@@ -14,7 +14,8 @@ public class SpashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         new Handler().postDelayed(new Runnable(){
             public void run(){
-                Intent intent = new Intent(SpashActivity.this, MainActivity.class);
+                Intent intent = new Intent(SpashActivity.this, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
                 finish();
             };
