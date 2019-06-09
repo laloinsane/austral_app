@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.laloinsane.austral_app.CampusActivity;
 import com.example.laloinsane.austral_app.MainActivity;
 import com.example.laloinsane.austral_app.Models.Campus;
 import com.example.laloinsane.austral_app.R;
@@ -40,11 +41,11 @@ public class CampusAdapter extends RecyclerView.Adapter<CampusAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         Campus p = dataset.get(i);
-        viewHolder.id_campus.setText(Integer.toString(p.getId_campus()));
+        //viewHolder.id_campus.setText(Integer.toString(p.getId_campus()));
         viewHolder.nombre_campus.setText(p.getNombre_campus());
         viewHolder.direccion_campus.setText(p.getDireccion_campus());
-        viewHolder.latitud_campus.setText(Double.toString(p.getLatitud_campus()));
-        viewHolder.longitud_campus.setText(Double.toString(p.getLongitud_campus()));
+        /*viewHolder.latitud_campus.setText(Double.toString(p.getLatitud_campus()));
+        viewHolder.longitud_campus.setText(Double.toString(p.getLongitud_campus()));*/
     }
 
     @Override
@@ -53,21 +54,21 @@ public class CampusAdapter extends RecyclerView.Adapter<CampusAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private TextView id_campus;
+        //private TextView id_campus;
         private TextView nombre_campus;
         private TextView direccion_campus;
-        private TextView latitud_campus;
-        private TextView longitud_campus;
+        /*private TextView latitud_campus;
+        private TextView longitud_campus;*/
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);
-            id_campus = (TextView) itemView.findViewById(R.id.id_campus);
+            //id_campus = (TextView) itemView.findViewById(R.id.id_campus);
             nombre_campus = (TextView) itemView.findViewById(R.id.nombre_campus);
             direccion_campus = (TextView) itemView.findViewById(R.id.direccion_campus);
-            latitud_campus = (TextView) itemView.findViewById(R.id.latitud_campus);
-            longitud_campus = (TextView) itemView.findViewById(R.id.longitud_campus);
+            /*latitud_campus = (TextView) itemView.findViewById(R.id.latitud_campus);
+            longitud_campus = (TextView) itemView.findViewById(R.id.longitud_campus);*/
         }
 
         @Override
@@ -75,9 +76,14 @@ public class CampusAdapter extends RecyclerView.Adapter<CampusAdapter.ViewHolder
             int pos = getAdapterPosition();
             if (pos != RecyclerView.NO_POSITION){
                 Campus clickedDataItem = dataset.get(pos);
-                Intent intent = new Intent(context, MainActivity.class);
-                //intent.putExtra("latitud",clickedDataItem.getLatitud_campus());
-                //intent.putExtra("longitud",clickedDataItem.getLongitud_campus());
+                Intent intent = new Intent(context, CampusActivity.class);
+
+                //Traspaso de datos al CampusActivity
+                intent.putExtra("campus_id",clickedDataItem.getId_campus());
+                intent.putExtra("campus_name",clickedDataItem.getNombre_campus());
+                intent.putExtra("latitud",clickedDataItem.getLatitud_campus());
+                intent.putExtra("longitud",clickedDataItem.getLongitud_campus());
+
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 Toast.makeText(v.getContext(), "You clicked " + clickedDataItem.getId_campus(), Toast.LENGTH_SHORT).show();

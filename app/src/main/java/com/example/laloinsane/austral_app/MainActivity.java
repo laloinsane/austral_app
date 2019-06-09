@@ -130,10 +130,10 @@ public class MainActivity extends AppCompatActivity {
                 anotherOverlayItemArray = new ArrayList<OverlayItem>();
 
                 for (Unidad unidad : unidades){
-                    double lat = Double.parseDouble(unidad.getLATITUD_UNIDAD());
-                    double lon = Double.parseDouble(unidad.getLONGITUD_UNIDAD());
+                   // double lat = Double.parseDouble(unidad.getLATITUD_UNIDAD());
+                    //double lon = Double.parseDouble(unidad.getLONGITUD_UNIDAD());
 
-                    anotherOverlayItemArray.add(new OverlayItem(unidad.getNOMBRE_UNIDAD(), "Ejemplo", new GeoPoint(lat, lon)));
+                    //anotherOverlayItemArray.add(new OverlayItem(unidad.getNOMBRE_UNIDAD(), "Ejemplo", new GeoPoint(lat, lon)));
 
                     markers = new ItemizedIconOverlay<>(anotherOverlayItemArray,
                             new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {

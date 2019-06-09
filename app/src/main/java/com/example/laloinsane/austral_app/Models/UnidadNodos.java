@@ -2,7 +2,7 @@ package com.example.laloinsane.austral_app.Models;
 
 import java.util.ArrayList;
 
-public class Unidad {
+public class UnidadNodos {
     private int id_unidad;
     private int id_campus;
     private String nombre_unidad;
@@ -10,6 +10,7 @@ public class Unidad {
     private double latitud_unidad;
     private double longitud_unidad;
     private ArrayList<Conexion> conexiones;
+    private ArrayList<Nodo> nodos;
 
     public int getId_unidad() {
         return id_unidad;
@@ -65,5 +66,13 @@ public class Unidad {
 
     public void setConexiones(ArrayList<Conexion> conexiones) {
         this.conexiones = conexiones;
+    }
+
+    public ArrayList<Nodo> getNodos() {
+        return nodos;
+    }
+
+    public void setNodos(ArrayList<Nodo> nodos) {
+        this.nodos = nodos;
     }
 }

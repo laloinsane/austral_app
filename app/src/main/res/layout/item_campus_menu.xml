@@ -14,28 +14,12 @@
         android:gravity="center">
 
         <TextView
-            android:id="@+id/id_campus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-
-        <TextView
             android:id="@+id/nombre_campus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/direccion_campus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/latitud_campus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/longitud_campus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

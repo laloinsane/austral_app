@@ -18,6 +18,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private Dialog acerca;
     private Button btn_acerca_aceptar;
 
+    private Button btn_test;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,11 +33,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void init() {
         btn_campus_menu = (Button) findViewById(R.id.btn_campus_menu);
         btn_acerca = (Button) findViewById(R.id.btn_acerca);
+        btn_test = (Button) findViewById(R.id.btn_test);
     }
 
     public void setupView(){
         btn_campus_menu.setOnClickListener(this);
         btn_acerca.setOnClickListener(this);
+        btn_test.setOnClickListener(this);
     }
 
     @Override
@@ -78,6 +82,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.btn_acerca: {
                 acerca.show();
+                break;
+            }
+            case R.id.btn_test: {
+                Intent intent=new Intent(HomeActivity.this, TestActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
                 break;
             }
         }
