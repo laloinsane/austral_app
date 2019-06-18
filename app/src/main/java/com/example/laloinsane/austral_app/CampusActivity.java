@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import com.example.laloinsane.austral_app.API.APIService;
 import com.example.laloinsane.austral_app.Models.Conexion;
-import com.example.laloinsane.austral_app.Models.Nodo;
 import com.example.laloinsane.austral_app.Models.Unidad;
 
 import org.osmdroid.api.IMapController;
@@ -33,7 +31,6 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 import java.util.List;
 
-import nose.Grafo;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,13 +39,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CampusActivity extends AppCompatActivity {
 
-    private Dialog acerca;
-    private Button btn_acerca_aceptar_x;
+    private Dialog calcular_ruta;
+    private Button btn_calcular_ruta_aceptar;
+    private TextView text_calcular_ruta;
     MapView map = null;
     private Retrofit retrofit;
     private ItemizedOverlay<OverlayItem> markers;
     private MyLocationNewOverlay mLocationOverlay;
-    private TextView textejemplo;
+    private int id_campus;
+    private double lat;
+    private double lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +56,9 @@ public class CampusActivity extends AppCompatActivity {
 
         //Obtencion de los datos del Activity anterior
         Bundle extras = getIntent().getExtras();
+        id_campus = extras.getInt("campus_id");
+        lat = extras.getDouble("latitud");
+        lon = extras.getDouble("longitud");
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(extras.getString("campus_name"));
@@ -81,7 +84,7 @@ public class CampusActivity extends AppCompatActivity {
                 .build();
 
         APIService api = retrofit.create(APIService.class);
-        Call<List<Unidad>> call = api.getUnidades(extras.getInt("campus_id"));
+        Call<List<Unidad>> call = api.getUnidades(id_campus);
 
         call.enqueue(new Callback<List<Unidad>>() {
             @Override
@@ -91,109 +94,11 @@ public class CampusActivity extends AppCompatActivity {
                     return;
                 }
                 List<Unidad> unidades = response.body();
-
                 ArrayList<OverlayItem> anotherOverlayItemArray;
                 anotherOverlayItemArray = new ArrayList<OverlayItem>();
 
                 for (final Unidad unidad : unidades) {
-
                     List<Conexion> con = unidad.getConexiones();
-                    /*if (con.size() != 0) {
-                        for (Conexion co : con) {
-                            anotherOverlayItemArray.add(new OverlayItem(unidad.getNombre_unidad(), "" + co.getDestino(), new GeoPoint(unidad.getLatitud_unidad(), unidad.getLongitud_unidad())));
-
-                            markers = new ItemizedIconOverlay<>(anotherOverlayItemArray,
-                                    new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                                        @Override
-                                        public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-
-                                            //Intent intent=new Intent(CampusActivity.this, RutaActivity.class);
-                                            //intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                            //startActivity(intent);
-
-                                            //acerca.show();
-
-                                            Toast.makeText(
-                                                    CampusActivity.this,
-                                                    "Item '" + item.getTitle() + "' (single=" + index
-                                                            + ")" + " " + item.getSnippet(), Toast.LENGTH_LONG).show();
-                                            return true;
-                                        }
-
-                                        @Override
-                                        public boolean onItemLongPress(final int index, final OverlayItem item) {
-                                            Toast.makeText(
-                                                    CampusActivity.this,
-                                                    "Item '" + item.getTitle() + "' (index long=" + index
-                                                            + ")", Toast.LENGTH_LONG).show();
-                                            return false;
-                                        }
-                                    }, getApplicationContext());
-                        }
-                    } else {
-                        anotherOverlayItemArray.add(new OverlayItem(unidad.getNombre_unidad(), "ejemplo", new GeoPoint(unidad.getLatitud_unidad(), unidad.getLongitud_unidad())));
-
-                        markers = new ItemizedIconOverlay<>(anotherOverlayItemArray,
-                                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                                    @Override
-                                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                                        Toast.makeText(
-                                                CampusActivity.this,
-                                                "Item '" + item.getTitle() + "' (single=" + index
-                                                        + ")" + " " + item.getSnippet(), Toast.LENGTH_LONG).show();
-                                        //acerca.show();
-                                        return true;
-                                    }
-
-                                    @Override
-                                    public boolean onItemLongPress(final int index, final OverlayItem item) {
-                                        Toast.makeText(
-                                                CampusActivity.this,
-                                                "Item '" + item.getTitle() + "' (index long=" + index
-                                                        + ")", Toast.LENGTH_LONG).show();
-                                        return false;
-                                    }
-                                }, getApplicationContext());
-                    }*/
-
-                    /*List<Conexion> con = unidad.getConexiones();
-                    if(con.size() != 0){
-                        for (Conexion co : con){
-                            anotherOverlayItemArray.add(new OverlayItem(unidad.getNombre_unidad(), co.getDestino(), new GeoPoint(unidad.getLatitud_unidad(), unidad.getLongitud_unidad())));
-
-                            if (co.getDestino() == 2) {
-                                id_test = (TextView) findViewById(R.id.id_test);
-                                id_test.setText("holo"+nodo.getLongitud_nodo()+co.getDistancia());
-                            }
-                        }
-                    }else{
-
-                    }*/
-
-
-
-
-                    /*anotherOverlayItemArray.add(new OverlayItem( unidad.getNombre_unidad(), unidad.getId_unidad()+"", new GeoPoint(unidad.getLatitud_unidad(), unidad.getLongitud_unidad())));
-
-                    markers = new ItemizedIconOverlay<>(anotherOverlayItemArray,
-                            new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                                @Override
-                                public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                                    createDialog(Integer.parseInt(item.getSnippet()));
-                                    acerca.show();
-
-                                    return true;
-                                }
-
-                                @Override
-                                public boolean onItemLongPress(final int index, final OverlayItem item) {
-                                    Toast.makeText(
-                                            CampusActivity.this,
-                                            "Item '" + item.getTitle() + "' (index long=" + index
-                                                    + ")", Toast.LENGTH_LONG).show();
-                                    return false;
-                                }
-                            }, getApplicationContext());*/
                     if (con.size() != 0) {
                         for (Conexion co : con) {
                             anotherOverlayItemArray.add(new OverlayItem(unidad.getNombre_unidad(), unidad.getId_unidad() + "", new GeoPoint(unidad.getLatitud_unidad(), unidad.getLongitud_unidad())));
@@ -202,9 +107,8 @@ public class CampusActivity extends AppCompatActivity {
                                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                                         @Override
                                         public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                                            createDialog(Integer.parseInt(item.getSnippet()));
-                                            acerca.show();
-
+                                            createDialog(Integer.parseInt(item.getSnippet()), item.getTitle());
+                                            calcular_ruta.show();
                                             return true;
                                         }
 
@@ -220,7 +124,6 @@ public class CampusActivity extends AppCompatActivity {
                             map.getOverlays().add(markers);
                         }
                     }
-                    //map.getOverlays().add(markers);
                 }
             }
 
@@ -238,7 +141,7 @@ public class CampusActivity extends AppCompatActivity {
         IMapController mapController = map.getController();
         mapController.setZoom(17.5);
 
-        GeoPoint startPoint = new GeoPoint(extras.getDouble("latitud"), extras.getDouble("longitud"));
+        GeoPoint startPoint = new GeoPoint(lat, lon);
         mapController.setCenter(startPoint);
     }
 
@@ -252,34 +155,35 @@ public class CampusActivity extends AppCompatActivity {
         map.onPause();
     }
 
-    protected void createDialog(int id){
-        acerca = new Dialog(this);
-        acerca.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        acerca.setContentView(R.layout.layout_calcular_ruta);
-        acerca.setCanceledOnTouchOutside(true);
-        acerca.setCancelable(true);
-        //id_x = (TextView) findViewById(R.id.id_x);
-        //id_x.setText("ruta: ");
-        textejemplo = (TextView) acerca.findViewById(R.id.textejemplo);
-        textejemplo.setText("wenawena"+id);
-        btn_acerca_aceptar_x = (Button) acerca.findViewById(R.id.btn_acerca_aceptar_x);
+    protected void createDialog(int id, String nombre){
+        calcular_ruta = new Dialog(this);
+        calcular_ruta.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        calcular_ruta.setContentView(R.layout.layout_calcular_ruta);
+        calcular_ruta.setCanceledOnTouchOutside(true);
+        calcular_ruta.setCancelable(true);
 
-        btn_acerca_aceptar_x.setTag(id);//a cada boton le agregas un tag
+        text_calcular_ruta = (TextView) calcular_ruta.findViewById(R.id.text_calcular_ruta);
+        text_calcular_ruta.setText("¿Quieres calcular el camino mas corto hasta la unidad "+'"'+nombre+'"'+" ?");
 
-        btn_acerca_aceptar_x.setOnClickListener(new View.OnClickListener() {
+        btn_calcular_ruta_aceptar = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_aceptar);
+        btn_calcular_ruta_aceptar.setTag(id);//a cada boton le agregas un tag
+
+        btn_calcular_ruta_aceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //acerca.dismiss();
                 Intent intent=new Intent(CampusActivity.this, RutaActivity.class);
 
                 int valor = (Integer) view.getTag();//tomas el tag asignado
 
                 //Traspaso de datos al CampusActivity
+                intent.putExtra("campus", id_campus);
                 intent.putExtra("unidad_id", valor);
+                intent.putExtra("latitud", 	lat);
+                intent.putExtra("longitud", lon);
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
-                acerca.dismiss();
+                calcular_ruta.dismiss();
             }
         });
     }

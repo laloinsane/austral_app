@@ -11,15 +11,15 @@
         android:gravity="center">
 
         <TextView
-            android:id="@+id/textejemplo"
+            android:id="@+id/text_calcular_ruta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <Button
-            android:id="@+id/btn_acerca_aceptar_x"
+            android:id="@+id/btn_calcular_ruta_aceptar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Aceptar"/>
+            android:text="Calcular"/>
 
     </LinearLayout>
 
