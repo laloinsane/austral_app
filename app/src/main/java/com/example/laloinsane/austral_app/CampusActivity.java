@@ -41,11 +41,12 @@ public class CampusActivity extends AppCompatActivity {
 
     private Dialog calcular_ruta;
     private Button btn_calcular_ruta_aceptar;
+    private Button btn_calcular_ruta_gps;
     private TextView text_calcular_ruta;
     MapView map = null;
     private Retrofit retrofit;
     private ItemizedOverlay<OverlayItem> markers;
-    private MyLocationNewOverlay mLocationOverlay;
+    //private MyLocationNewOverlay mLocationOverlay;
     private int id_campus;
     private double lat;
     private double lon;
@@ -73,10 +74,10 @@ public class CampusActivity extends AppCompatActivity {
 
         //My Location
         //note you have handle the permissions yourself, the overlay did not do it for you
-        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx), map);
+        /*mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx), map);
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.enableFollowLocation();
-        map.getOverlays().add(this.mLocationOverlay);
+        map.getOverlays().add(this.mLocationOverlay);*/
 
         retrofit = new Retrofit.Builder()
                 .baseUrl("base_url")
@@ -180,6 +181,28 @@ public class CampusActivity extends AppCompatActivity {
                 intent.putExtra("unidad_id", valor);
                 intent.putExtra("latitud", 	lat);
                 intent.putExtra("longitud", lon);
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                calcular_ruta.dismiss();
+            }
+        });
+
+        btn_calcular_ruta_gps = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_gps);
+        btn_calcular_ruta_gps.setTag(id);//a cada boton le agregas un tag
+
+        btn_calcular_ruta_gps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(CampusActivity.this, RutaGpsActivity.class);
+
+                int valor = (Integer) view.getTag();//tomas el tag asignado
+
+                //Traspaso de datos al CampusActivity
+                intent.putExtra("campus_gps", id_campus);
+                intent.putExtra("unidad_id_gps", valor);
+                intent.putExtra("latitud_gps", 	lat);
+                intent.putExtra("longitud_gps", lon);
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
