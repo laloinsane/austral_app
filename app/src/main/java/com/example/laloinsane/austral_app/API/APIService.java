@@ -1,7 +1,7 @@
 package com.example.laloinsane.austral_app.API;
 
 import com.example.laloinsane.austral_app.Models.CampusRespuesta;
-import com.example.laloinsane.austral_app.Models.Nodo;
+import com.example.laloinsane.austral_app.Models.Persona;
 import com.example.laloinsane.austral_app.Models.Unidad;
 import com.example.laloinsane.austral_app.Models.UnidadNodos;
 
@@ -20,4 +20,13 @@ public interface APIService {
 
     @GET("campus/{id_campus}/unidad/{id_unidad}")
     Call<UnidadNodos> getUnidad(@Path("id_campus") int id_campus, @Path("id_unidad") int id_unidad);
+
+    @GET("campus/1/persona/{nombre_persona}")
+    Call<List<Persona>> getPersonas(@Path("nombre_persona") String nombre_persona);
+
+    /*@GET("getcontacts.php")
+    Call<List<Contact>> getContact(
+            @Query("item_type") String item_type,
+            @Query("key") String keyword
+    );*/
 }
