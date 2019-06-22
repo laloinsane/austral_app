@@ -2,6 +2,7 @@ package com.example.laloinsane.austral_app.Models;
 
 public class Persona {
     private int id_persona;
+    private int id_unidad;
     private String nombre_persona;
     private String primer_nombre_persona;
     private String segundo_nombre_persona;
@@ -17,6 +18,14 @@ public class Persona {
 
     public void setId_persona(int id_persona) {
         this.id_persona = id_persona;
+    }
+
+    public int getId_unidad() {
+        return id_unidad;
+    }
+
+    public void setId_unidad(int id_unidad) {
+        this.id_unidad = id_unidad;
     }
 
     public String getNombre_persona() {

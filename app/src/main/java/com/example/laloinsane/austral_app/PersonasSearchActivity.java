@@ -35,31 +35,41 @@ public class PersonasSearchActivity extends AppCompatActivity {
     //TextView search;
     //String[] item;
 
+    private int campus;
+    private double lat;
+    private double lon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personas_search);
+
+        //Obtencion de los datos del Activity anterior
+        Bundle extras = getIntent().getExtras();
+        campus = extras.getInt("campus_id_busqueda");
+        lat = extras.getDouble("latitud_busqueda");
+        lon = extras.getDouble("longitud_busqueda");
 
         progressBar = findViewById(R.id.progress_personas);
         recyclerView = findViewById(R.id.recyclerView_personas);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        fetchContact("");//sin ninguna palabra de filtrado
+        fetchContact(campus, "");//sin ninguna palabra de filtrado
         //fetchContact("users", "");
     }
 
-    public void fetchContact(String key){
+    public void fetchContact(int id_campus,String key){
         apiInterface = ApiClient.getApiClient().create(APIService.class);
         //Call<List<Persona>> call = apiInterface.getPersonas(type, key);
-        Call<List<Persona>> call = apiInterface.getPersonas(key);
+        Call<List<Persona>> call = apiInterface.getPersonas(id_campus, key);
 
         call.enqueue(new Callback<List<Persona>>() {
             @Override
             public void onResponse(Call<List<Persona>> call, Response<List<Persona>> response) {
                 progressBar.setVisibility(View.GONE);
                 personas = response.body();
-                adapter = new PersonaAdapter(personas, PersonasSearchActivity.this);
+                adapter = new PersonaAdapter(personas, PersonasSearchActivity.this, campus, lat, lon);
                 recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
@@ -110,14 +120,14 @@ public class PersonasSearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                fetchContact(query);
+                fetchContact(campus, query);
                 searchView.clearFocus();
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                fetchContact(newText);
+                fetchContact(campus, newText);
                 return false;
             }
         });
