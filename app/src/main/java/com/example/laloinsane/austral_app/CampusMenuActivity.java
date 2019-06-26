@@ -5,8 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
+import com.example.laloinsane.austral_app.API.APIClient;
 import com.example.laloinsane.austral_app.API.APIService;
 import com.example.laloinsane.austral_app.Adapters.CampusAdapter;
 import com.example.laloinsane.austral_app.Models.Campus;
@@ -17,13 +19,12 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CampusMenuActivity extends AppCompatActivity {
-    private Retrofit retrofit;
+    private ProgressBar progressBar;
+    private APIService api;
     private RecyclerView recyclerView;
-    private CampusAdapter lista;
+    private CampusAdapter listaCampus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,41 +33,34 @@ public class CampusMenuActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Campus");
+        progressBar = findViewById(R.id.progress_campus_menu);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView_campus_menu);
-        lista = new CampusAdapter(this);
-        recyclerView.setAdapter(lista);
+        listaCampus = new CampusAdapter(this);
+        recyclerView.setAdapter(listaCampus);
         recyclerView.setHasFixedSize(true);
         final GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(layoutManager);
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl("base_url")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
         obtenerDatos();
     }
 
     private void obtenerDatos(){
-        APIService service = retrofit.create(APIService.class);
-        Call<CampusRespuesta> apiRespuestaCall = service.getCampus();
+        api = APIClient.getAPIClient().create(APIService.class);
+        Call<CampusRespuesta> apiCall = api.getCampus();
 
-        apiRespuestaCall.enqueue(new Callback<CampusRespuesta>() {
+        apiCall.enqueue(new Callback<CampusRespuesta>() {
             @Override
             public void onResponse(Call<CampusRespuesta> call, Response<CampusRespuesta> response) {
-                if(response.isSuccessful()){
-                    CampusRespuesta apiRespuesta = response.body();
-                    ArrayList<Campus> datos= apiRespuesta.getCampus();
-                    lista.addCampus(datos);
-                }else{
-                    Log.e("TIPO_MENU", " onResponse: " + response.errorBody());
-                }
+                progressBar.setVisibility(View.GONE);
+                CampusRespuesta apiRespuesta = response.body();
+                ArrayList<Campus> datos= apiRespuesta.getCampus();
+                listaCampus.addCampus(datos);
             }
 
             @Override
             public void onFailure(Call<CampusRespuesta> call, Throwable t) {
-                Log.e("TIPO_MENU", " onFailure: " + t.getMessage());
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

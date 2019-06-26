@@ -5,30 +5,47 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
-    <LinearLayout
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btn_campus_menu"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
             android:layout_height="wrap_content"
-            android:text="Campus"/>
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <Button
-            android:id="@+id/btn_personas_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Personas"/>
+            <Button
+                android:layout_marginTop="50dp"
+                android:paddingTop="20dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="20dp"
+                android:textSize="20sp"
+                android:textColor="#111"
+                android:id="@+id/btn_campus_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:text="Campus"/>
 
-        <Button
-            android:id="@+id/btn_acerca"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Acerca"/>
+            <Button
+                android:paddingTop="20dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="20dp"
+                android:textSize="20sp"
+                android:textColor="#111"
+                android:id="@+id/btn_acerca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:text="Acerca"/>
 
-    </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

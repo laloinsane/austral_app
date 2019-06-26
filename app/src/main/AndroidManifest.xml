@@ -71,7 +71,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".PersonasSearchActivity">
+        <activity
+            android:name=".PersonasSearchActivity"
+            android:parentActivityName=".CampusMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.SEARCH" />

@@ -2,6 +2,7 @@ package com.example.laloinsane.austral_app;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,9 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.laloinsane.austral_app.API.APIClient;
 import com.example.laloinsane.austral_app.API.APIService;
 import com.example.laloinsane.austral_app.Adapters.PersonaAdapter;
 import com.example.laloinsane.austral_app.Models.Persona;
@@ -25,19 +25,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PersonasSearchActivity extends AppCompatActivity {
-
+    private ProgressBar progressBar;
+    private int campus;
+    private double lat;
+    private double lon;
+    private APIService api;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private List<Persona> personas;
     private PersonaAdapter adapter;
-    private APIService apiInterface;
-    ProgressBar progressBar;
-    //TextView search;
-    //String[] item;
-
-    private int campus;
-    private double lat;
-    private double lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +46,20 @@ public class PersonasSearchActivity extends AppCompatActivity {
         lat = extras.getDouble("latitud_busqueda");
         lon = extras.getDouble("longitud_busqueda");
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Personas");
         progressBar = findViewById(R.id.progress_personas);
+
         recyclerView = findViewById(R.id.recyclerView_personas);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         fetchContact(campus, "");//sin ninguna palabra de filtrado
-        //fetchContact("users", "");
     }
 
     public void fetchContact(int id_campus,String key){
-        apiInterface = ApiClient.getApiClient().create(APIService.class);
-        //Call<List<Persona>> call = apiInterface.getPersonas(type, key);
-        Call<List<Persona>> call = apiInterface.getPersonas(id_campus, key);
+        api = APIClient.getAPIClient().create(APIService.class);
+        Call<List<Persona>> call = api.getPersonas(id_campus, key);
 
         call.enqueue(new Callback<List<Persona>>() {
             @Override
@@ -77,35 +74,9 @@ public class PersonasSearchActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Persona>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(PersonasSearchActivity.this, "Error\n"+t.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }
-
-    /*public void fetchContact(String type, String key){
-
-        apiInterface = ApiClient.getApiClient().create(APIService.class);
-
-        //Call<List<Persona>> call = apiInterface.getPersonas(type, key);
-        Call<List<Persona>> call = apiInterface.getPersonas();
-        call.enqueue(new Callback<List<Persona>>() {
-            @Override
-            public void onResponse(Call<List<Persona>> call, Response<List<Persona>> response) {
-                progressBar.setVisibility(View.GONE);
-                personas = response.body();
-                adapter = new PersonaAdapter(personas, PersonasSearchActivity.this);
-                recyclerView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<List<Persona>> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(PersonasSearchActivity.this, "Error\n"+t.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }*/
-
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {

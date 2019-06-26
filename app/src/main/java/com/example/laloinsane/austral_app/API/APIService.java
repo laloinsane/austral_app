@@ -23,13 +23,4 @@ public interface APIService {
 
     @GET("campus/{id_campus}/persona/{nombre_persona}")
     Call<List<Persona>> getPersonas(@Path("id_campus") int id_campus, @Path("nombre_persona") String nombre_persona);
-
-    //@GET("campus/1/persona/{nombre_persona}")
-    //Call<List<Persona>> getPersonas(@Path("nombre_persona") String nombre_persona);
-
-    /*@GET("getcontacts.php")
-    Call<List<Contact>> getContact(
-            @Query("item_type") String item_type,
-            @Query("key") String keyword
-    );*/
 }

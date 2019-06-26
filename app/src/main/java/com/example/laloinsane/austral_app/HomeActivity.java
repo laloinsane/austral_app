@@ -13,11 +13,10 @@ import android.widget.Button;
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btn_campus_menu;
-    private Button btn_personas_menu;
-    private AlertDialog exit_dialog;
     private Button btn_acerca;
     private Dialog acerca;
     private Button btn_acerca_aceptar;
+    private AlertDialog exit_dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +30,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     public void init() {
         btn_campus_menu = (Button) findViewById(R.id.btn_campus_menu);
-        btn_personas_menu = (Button) findViewById(R.id.btn_personas_menu);
         btn_acerca = (Button) findViewById(R.id.btn_acerca);
     }
 
     public void setupView(){
         btn_campus_menu.setOnClickListener(this);
-        btn_personas_menu.setOnClickListener(this);
         btn_acerca.setOnClickListener(this);
     }
 
@@ -75,12 +72,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (id){
             case R.id.btn_campus_menu: {
                 Intent intent=new Intent(HomeActivity.this, CampusMenuActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
-                break;
-            }
-            case R.id.btn_personas_menu: {
-                Intent intent=new Intent(HomeActivity.this, PersonasSearchActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
                 break;

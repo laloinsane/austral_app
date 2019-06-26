@@ -13,19 +13,33 @@
         <TextView
             android:id="@+id/text_calcular_ruta"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/btn_calcular_ruta_aceptar"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calcular"/>
+            android:textSize="16dp"
+            android:textColor="#111111"/>
 
-        <Button
-            android:id="@+id/btn_calcular_ruta_gps"
-            android:layout_width="wrap_content"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="GPS"/>
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn_calcular_ruta_aceptar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Calcular"
+                android:textAllCaps="false"
+                android:layout_margin="5dp"/>
+
+            <Button
+                android:id="@+id/btn_calcular_ruta_gps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GPS"
+                android:textAllCaps="false"
+                android:layout_margin="5dp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

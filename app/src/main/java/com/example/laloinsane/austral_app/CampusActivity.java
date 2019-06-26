@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.laloinsane.austral_app.API.APIClient;
 import com.example.laloinsane.austral_app.API.APIService;
 import com.example.laloinsane.austral_app.Models.Conexion;
 import com.example.laloinsane.austral_app.Models.Unidad;
@@ -25,8 +26,6 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,26 +33,27 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CampusActivity extends AppCompatActivity {
-
-    private Dialog calcular_ruta;
-    private Button btn_calcular_ruta_aceptar;
-    private Button btn_calcular_ruta_gps;
-    private TextView text_calcular_ruta;
-    MapView map = null;
-    private Retrofit retrofit;
-    private ItemizedOverlay<OverlayItem> markers;
-    //private MyLocationNewOverlay mLocationOverlay;
     private int id_campus;
     private double lat;
     private double lon;
+    private APIService api;
+    MapView map = null;
+    private ItemizedOverlay<OverlayItem> markers;
+    private Dialog calcular_ruta;
+    private TextView text_calcular_ruta;
+    private Button btn_calcular_ruta_aceptar;
+    private Button btn_calcular_ruta_gps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Context ctx = getApplicationContext();
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+
+        setContentView(R.layout.activity_campus);
 
         //Obtencion de los datos del Activity anterior
         Bundle extras = getIntent().getExtras();
@@ -64,47 +64,33 @@ public class CampusActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(extras.getString("campus_name"));
 
-        Context ctx = getApplicationContext();
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-
-        setContentView(R.layout.activity_campus);
-
         map = (MapView) findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
+        IMapController mapController = map.getController();
+        mapController.setZoom(17.5);
+        GeoPoint startPoint = new GeoPoint(lat, lon);
+        mapController.setCenter(startPoint);
 
-        //My Location
-        //note you have handle the permissions yourself, the overlay did not do it for you
-        /*mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx), map);
-        mLocationOverlay.enableMyLocation();
-        mLocationOverlay.enableFollowLocation();
-        map.getOverlays().add(this.mLocationOverlay);*/
+        obtenerDatos();
+    }
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl("base_url")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    private void obtenerDatos(){
+        api = APIClient.getAPIClient().create(APIService.class);
+        Call<List<Unidad>> apiCall = api.getUnidades(id_campus);
 
-        APIService api = retrofit.create(APIService.class);
-        Call<List<Unidad>> call = api.getUnidades(id_campus);
-
-        call.enqueue(new Callback<List<Unidad>>() {
+        apiCall.enqueue(new Callback<List<Unidad>>() {
             @Override
             public void onResponse(Call<List<Unidad>> call, Response<List<Unidad>> response) {
-                if (!response.isSuccessful()) {
-                    //hora.setText("Code: "+response.code());
-                    return;
-                }
                 List<Unidad> unidades = response.body();
-                ArrayList<OverlayItem> anotherOverlayItemArray;
-                anotherOverlayItemArray = new ArrayList<OverlayItem>();
+                ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
 
                 for (final Unidad unidad : unidades) {
                     List<Conexion> con = unidad.getConexiones();
                     if (con.size() != 0) {
                         for (Conexion co : con) {
-                            anotherOverlayItemArray.add(new OverlayItem(unidad.getNombre_unidad(), unidad.getId_unidad() + "", new GeoPoint(unidad.getLatitud_unidad(), unidad.getLongitud_unidad())));
+                            items.add(new OverlayItem(unidad.getNombre_unidad(), unidad.getId_unidad() + "", new GeoPoint(unidad.getLatitud_unidad(), unidad.getLongitud_unidad())));
 
-                            markers = new ItemizedIconOverlay<>(anotherOverlayItemArray,
+                            markers = new ItemizedIconOverlay<>(items,
                                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                                         @Override
                                         public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
@@ -123,6 +109,7 @@ public class CampusActivity extends AppCompatActivity {
                                         }
                                     }, getApplicationContext());
                             map.getOverlays().add(markers);
+                            map.invalidate();
                         }
                     }
                 }
@@ -130,20 +117,8 @@ public class CampusActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Unidad>> call, Throwable t) {
-                //hora.setText(t.getMessage());
             }
         });
-
-        //map.getController().setZoom(17.5);
-        //mi localizacion
-        //GeoPoint geoPoint = mLocationOverlay.getMyLocation();
-        //map.getController().animateTo(geoPoint);
-
-        IMapController mapController = map.getController();
-        mapController.setZoom(17.5);
-
-        GeoPoint startPoint = new GeoPoint(lat, lon);
-        mapController.setCenter(startPoint);
     }
 
     public void onResume() {
@@ -154,6 +129,7 @@ public class CampusActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         map.onPause();
+        overridePendingTransition(0, 0);
     }
 
     protected void createDialog(int id, String nombre){
@@ -168,14 +144,12 @@ public class CampusActivity extends AppCompatActivity {
 
         btn_calcular_ruta_aceptar = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_aceptar);
         btn_calcular_ruta_aceptar.setTag(id);//a cada boton le agregas un tag
-
         btn_calcular_ruta_aceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(CampusActivity.this, RutaActivity.class);
 
                 int valor = (Integer) view.getTag();//tomas el tag asignado
-
                 //Traspaso de datos al CampusActivity
                 intent.putExtra("campus", id_campus);
                 intent.putExtra("unidad_id", valor);
@@ -190,14 +164,12 @@ public class CampusActivity extends AppCompatActivity {
 
         btn_calcular_ruta_gps = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_gps);
         btn_calcular_ruta_gps.setTag(id);//a cada boton le agregas un tag
-
         btn_calcular_ruta_gps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(CampusActivity.this, RutaGpsActivity.class);
 
                 int valor = (Integer) view.getTag();//tomas el tag asignado
-
                 //Traspaso de datos al CampusActivity
                 intent.putExtra("campus_gps", id_campus);
                 intent.putExtra("unidad_id_gps", valor);
