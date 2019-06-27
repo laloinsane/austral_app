@@ -6,7 +6,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.example.laloinsane.austral_app.API.APIClient;
 import com.example.laloinsane.austral_app.API.APIService;
 import com.example.laloinsane.austral_app.Models.Conexion;
 import com.example.laloinsane.austral_app.Models.UnidadNodos;
@@ -17,6 +21,9 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedOverlay;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -28,13 +35,15 @@ import nose.Nodo;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RutaGpsActivity extends AppCompatActivity {
-
-    private Retrofit retrofit;
-    //osmdroid
+public class RutaGpsActivity extends AppCompatActivity implements View.OnClickListener{
+    private int var_id_unidad;
+    private int var_id_campus;
+    private double var_lat;
+    private double var_lon;
+    private Polyline line_old;
+    private Button btn_get_ruta;
+    private APIService api;
     MapView map = null;
     private MyLocationNewOverlay mLocationOverlay;
 
@@ -44,6 +53,10 @@ public class RutaGpsActivity extends AppCompatActivity {
 
         //Obtencion de los datos del Activity anterior
         Bundle extras = getIntent().getExtras();
+        var_id_unidad = extras.getInt("unidad_id_gps");
+        var_id_campus = extras.getInt("campus_gps");
+        var_lat = extras.getDouble("latitud_gps_unidad");
+        var_lon = extras.getDouble("longitud_gps_unidad");
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("" + extras.getInt("unidad_id_gps"));
@@ -53,6 +66,10 @@ public class RutaGpsActivity extends AppCompatActivity {
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
         setContentView(R.layout.activity_ruta_gps);
+
+        btn_get_ruta = (Button) findViewById(R.id.btn_get_ruta);
+        btn_get_ruta.setOnClickListener(this);
+        line_old = new Polyline();
 
         //osmdroid
         map = (MapView) findViewById(R.id.map_ruta_gps);
@@ -71,26 +88,24 @@ public class RutaGpsActivity extends AppCompatActivity {
         mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl("base_url")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        obtenerDatos(extras.getInt("unidad_id_gps"), extras.getInt("campus_gps"));
+        Marker startMarker = new Marker(map);
+        startMarker.setPosition(new GeoPoint(var_lat, var_lon));
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        map.getOverlays().add(startMarker);
     }
 
-    private void obtenerDatos(final int id_unidad,final int id_campus){
-        APIService api = retrofit.create(APIService.class);
-        //Call<UnidadNodos> call = api.getUnidad(1, 2);
+    private void obtenerDatos(final int id_unidad, final int id_campus) {
+        map.getOverlayManager().remove(line_old);
+        api = APIClient.getAPIClient().create(APIService.class);
         Call<UnidadNodos> call = api.getUnidad(id_campus, id_unidad);
 
         call.enqueue(new Callback<UnidadNodos>() {
             @Override
             public void onResponse(Call<UnidadNodos> call, Response<UnidadNodos> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     UnidadNodos apiRespuesta = response.body();
-                    ArrayList<Conexion> datos= apiRespuesta.getConexiones();
-                    ArrayList<com.example.laloinsane.austral_app.Models.Nodo> datos_nodos= apiRespuesta.getNodos();
+                    ArrayList<Conexion> datos = apiRespuesta.getConexiones();
+                    ArrayList<com.example.laloinsane.austral_app.Models.Nodo> datos_nodos = apiRespuesta.getNodos();
                     List<Nodo> lista_nodos_ejemplo = new ArrayList<nose.Nodo>();
 
                     int nodo_origen = 0;
@@ -111,44 +126,44 @@ public class RutaGpsActivity extends AppCompatActivity {
                     }
 
                     nose.Vertice[] vertices = new nose.Vertice[lista_nodos_ejemplo.size()];
-                    for(int i = 0; i < vertices.length; i++){
+                    for (int i = 0; i < vertices.length; i++) {
                         vertices[i] = new nose.Vertice(lista_nodos_ejemplo.get(i).getId_nodo());
 
                         Haversine jue = new Haversine(6371);
                         double distancia = jue.CalculationByDistance(mLocationOverlay.getMyLocationProvider().getLastKnownLocation().getLatitude(), mLocationOverlay.getMyLocationProvider().getLastKnownLocation().getLongitude(), lista_nodos_ejemplo.get(i).getLatitud_nodo(), lista_nodos_ejemplo.get(i).getLongitud_nodo());
 
-                        if(nodo_origen == 0){
+                        if (nodo_origen == 0) {
                             nodo_origen = lista_nodos_ejemplo.get(i).getId_nodo();
                             distancia_origen = distancia;
-                        }else{
-                            if(distancia < distancia_origen){
+                        } else {
+                            if (distancia < distancia_origen) {
                                 nodo_origen = lista_nodos_ejemplo.get(i).getId_nodo();
                                 distancia_origen = distancia;
                             }
                         }
 
                         List<nose.Conexion> con = lista_nodos_ejemplo.get(i).getConexiones();
-                        for(int x = 0; x < con.size(); x++){
+                        for (int x = 0; x < con.size(); x++) {
                             vertices[i].add_arista(lista_nodos_ejemplo.get(i).getId_nodo(), con.get(x).getDestino(), con.get(x).getDistancia());
                         }
                     }
 
                     double[][] matriz_adyacencia = new double[vertices.length][vertices.length];
-                    for(int i = 0; i < vertices.length; i++){
-                        for(int j = 0; j < vertices.length; j++){
+                    for (int i = 0; i < vertices.length; i++) {
+                        for (int j = 0; j < vertices.length; j++) {
                             boolean is_empty = false;
                             double distancia = 0;
 
                             ArrayList<nose.Arista> arr = vertices[i].getAristas();
-                            for(int x = 0; x < arr.size(); x++){
-                                if(vertices[j].getId_vertice() == arr.get(x).getId_vertice_destino()){
+                            for (int x = 0; x < arr.size(); x++) {
+                                if (vertices[j].getId_vertice() == arr.get(x).getId_vertice_destino()) {
                                     is_empty = true;
                                     distancia = arr.get(x).getDistancia();
                                 }
                             }
-                            if(is_empty == true){
+                            if (is_empty == true) {
                                 matriz_adyacencia[i][j] = distancia;
-                            }else{
+                            } else {
                                 matriz_adyacencia[i][j] = 0;
                             }
                         }
@@ -156,31 +171,29 @@ public class RutaGpsActivity extends AppCompatActivity {
 
                     nose.Grafo b = new nose.Grafo(vertices, matriz_adyacencia);
                     nose.direccion hol = b.camino_mas_corto(nodo_origen, datos.get(0).getDestino());
-                    //nose.direccion hol = b.camino_mas_corto(4, datos.get(0).getDestino());
-                    //nose.direccion hol = b.camino_mas_corto(3, datos.get(0).getDestino());
-                    //nose.direccion hol = b.camino_mas_corto(3, 2);
 
                     ArrayList<Integer> ruta = hol.getRuta();
 
                     List<GeoPoint> geoPoints = new ArrayList<>();
 
-                    for(int i= 0; i<ruta.size(); i++){
+                    for (int i = 0; i < ruta.size(); i++) {
                         for (com.example.laloinsane.austral_app.Models.Nodo nodo : datos_nodos) {
-                            if(ruta.get(i) == nodo.getId_nodo()){
-                                GeoPoint gpt = new GeoPoint(nodo.getLatitud_nodo(), 	nodo.getLongitud_nodo());
+                            if (ruta.get(i) == nodo.getId_nodo()) {
+                                GeoPoint gpt = new GeoPoint(nodo.getLatitud_nodo(), nodo.getLongitud_nodo());
                                 geoPoints.add(gpt);
                             }
                         }
                     }
 
-                    Polyline line = new Polyline();   //see note below!
-                    line.setPoints(geoPoints);
-                    map.getOverlayManager().add(line);
+                    line_old.setPoints(geoPoints);
+                    map.getOverlayManager().add(line_old);
+                    map.invalidate();
 
-                }else{
+                } else {
                     Log.e("TIPO_MENU", " onResponse: " + response.errorBody());
                 }
             }
+
             @Override
             public void onFailure(Call<UnidadNodos> call, Throwable t) {
                 Log.e("TIPO_MENU", " onFailure: " + t.getMessage());
@@ -193,9 +206,25 @@ public class RutaGpsActivity extends AppCompatActivity {
         super.onResume();
         map.onResume();
     }
+
     //osmdroid
     public void onPause() {
         super.onPause();
         map.onPause();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id){
+            case R.id.btn_get_ruta: {
+                if(mLocationOverlay.getMyLocation() == null) {
+                    Toast.makeText(this, "No se ha podido encontrar la señal del GPS", Toast.LENGTH_LONG).show();
+                }else {
+                    obtenerDatos(var_id_unidad, var_id_campus);
+                }
+                break;
+            }
+        }
     }
 }

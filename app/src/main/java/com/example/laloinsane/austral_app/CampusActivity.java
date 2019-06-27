@@ -94,7 +94,7 @@ public class CampusActivity extends AppCompatActivity {
                                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                                         @Override
                                         public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                                            createDialog(Integer.parseInt(item.getSnippet()), item.getTitle());
+                                            createDialog(Integer.parseInt(item.getSnippet()), item.getTitle(), item.getPoint().getLatitude(), item.getPoint().getLongitude());
                                             calcular_ruta.show();
                                             return true;
                                         }
@@ -132,7 +132,7 @@ public class CampusActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
-    protected void createDialog(int id, String nombre){
+    protected void createDialog(int id, String nombre, final Double la, final Double lo){
         calcular_ruta = new Dialog(this);
         calcular_ruta.requestWindowFeature(Window.FEATURE_NO_TITLE);
         calcular_ruta.setContentView(R.layout.layout_calcular_ruta);
@@ -175,6 +175,8 @@ public class CampusActivity extends AppCompatActivity {
                 intent.putExtra("unidad_id_gps", valor);
                 intent.putExtra("latitud_gps", 	lat);
                 intent.putExtra("longitud_gps", lon);
+                intent.putExtra("latitud_gps_unidad", 	la);
+                intent.putExtra("longitud_gps_unidad", lo);
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
