@@ -46,6 +46,7 @@ public class RutaGpsActivity extends AppCompatActivity implements View.OnClickLi
     private APIService api;
     MapView map = null;
     private MyLocationNewOverlay mLocationOverlay;
+    Marker startMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class RutaGpsActivity extends AppCompatActivity implements View.OnClickLi
         var_lon = extras.getDouble("longitud_gps_unidad");
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("" + extras.getInt("unidad_id_gps"));
+        actionBar.setTitle(extras.getString("nombre"));
 
         //osmdroid
         Context ctx = getApplicationContext();
@@ -88,9 +89,10 @@ public class RutaGpsActivity extends AppCompatActivity implements View.OnClickLi
         mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
 
-        Marker startMarker = new Marker(map);
+        startMarker = new Marker(map);
         startMarker.setPosition(new GeoPoint(var_lat, var_lon));
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        startMarker.setInfoWindow(null);
         map.getOverlays().add(startMarker);
     }
 
@@ -200,6 +202,16 @@ public class RutaGpsActivity extends AppCompatActivity implements View.OnClickLi
 
                     line_old.setPoints(geoPoints);
                     map.getOverlayManager().add(line_old);
+                    map.invalidate();
+
+                    map.getOverlayManager().remove(startMarker);
+                    map.invalidate();
+
+                    startMarker = new Marker(map);
+                    startMarker.setPosition(new GeoPoint(var_lat, var_lon));
+                    startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                    startMarker.setInfoWindow(null);
+                    map.getOverlays().add(startMarker);
                     map.invalidate();
 
                 } else {

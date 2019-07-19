@@ -4,6 +4,8 @@ public class Persona {
     private int id_persona;
     private int id_unidad;
     private String nombre_unidad;
+    private double latitud_unidad;
+    private double longitud_unidad;
     private String nombre_persona;
     private String primer_nombre_persona;
     private String segundo_nombre_persona;
@@ -35,6 +37,22 @@ public class Persona {
 
     public void setNombre_unidad(String nombre_unidad) {
         this.nombre_unidad = nombre_unidad;
+    }
+
+    public double getLatitud_unidad() {
+        return latitud_unidad;
+    }
+
+    public void setLatitud_unidad(double latitud_unidad) {
+        this.latitud_unidad = latitud_unidad;
+    }
+
+    public double getLongitud_unidad() {
+        return longitud_unidad;
+    }
+
+    public void setLongitud_unidad(double longitud_unidad) {
+        this.longitud_unidad = longitud_unidad;
     }
 
     public String getNombre_persona() {

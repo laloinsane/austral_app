@@ -43,7 +43,6 @@ public class CampusActivity extends AppCompatActivity {
     private ItemizedOverlay<OverlayItem> markers;
     private Dialog calcular_ruta;
     private TextView text_calcular_ruta;
-    //private Button btn_calcular_ruta_aceptar;
     private Button btn_calcular_ruta_gps;
     private Button btn_calcular_ruta_cancelar;
 
@@ -133,7 +132,7 @@ public class CampusActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
-    protected void createDialog(int id, String nombre, final Double la, final Double lo){
+    protected void createDialog(int id, final String nombre, final Double la, final Double lo){
         calcular_ruta = new Dialog(this);
         calcular_ruta.requestWindowFeature(Window.FEATURE_NO_TITLE);
         calcular_ruta.setContentView(R.layout.layout_calcular_ruta);
@@ -142,28 +141,6 @@ public class CampusActivity extends AppCompatActivity {
 
         text_calcular_ruta = (TextView) calcular_ruta.findViewById(R.id.text_calcular_ruta);
         text_calcular_ruta.setText(nombre);
-
-        //text_calcular_ruta.setText("¿Quieres calcular el camino mas corto hasta la unidad "+'"'+nombre+'"'+" ?");
-
-        /*btn_calcular_ruta_aceptar = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_aceptar);
-        btn_calcular_ruta_aceptar.setTag(id);//a cada boton le agregas un tag
-        btn_calcular_ruta_aceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(CampusActivity.this, RutaActivity.class);
-
-                int valor = (Integer) view.getTag();//tomas el tag asignado
-                //Traspaso de datos al CampusActivity
-                intent.putExtra("campus", id_campus);
-                intent.putExtra("unidad_id", valor);
-                intent.putExtra("latitud", 	lat);
-                intent.putExtra("longitud", lon);
-
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
-                calcular_ruta.dismiss();
-            }
-        });*/
 
         btn_calcular_ruta_gps = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_gps);
         btn_calcular_ruta_gps.setTag(id);//a cada boton le agregas un tag
@@ -180,6 +157,7 @@ public class CampusActivity extends AppCompatActivity {
                 intent.putExtra("longitud_gps", lon);
                 intent.putExtra("latitud_gps_unidad", 	la);
                 intent.putExtra("longitud_gps_unidad", lo);
+                intent.putExtra("nombre", nombre);
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);

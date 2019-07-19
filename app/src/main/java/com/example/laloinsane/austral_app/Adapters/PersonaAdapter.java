@@ -99,8 +99,11 @@ public class PersonaAdapter extends RecyclerView.Adapter<PersonaAdapter.MyViewHo
                         //Traspaso de datos al CampusActivity
                         intent.putExtra("campus_gps", campus);
                         intent.putExtra("unidad_id_gps", clickedDataItem.getId_unidad());
-                        intent.putExtra("latitud_gps", 	lat);
+                        intent.putExtra("latitud_gps", lat);
                         intent.putExtra("longitud_gps", lon);
+                        intent.putExtra("latitud_gps_unidad", clickedDataItem.getLatitud_unidad());
+                        intent.putExtra("longitud_gps_unidad", clickedDataItem.getLongitud_unidad());
+                        intent.putExtra("nombre", clickedDataItem.getNombre_persona());
 
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         context.startActivity(intent);
