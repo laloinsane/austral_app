@@ -43,8 +43,9 @@ public class CampusActivity extends AppCompatActivity {
     private ItemizedOverlay<OverlayItem> markers;
     private Dialog calcular_ruta;
     private TextView text_calcular_ruta;
-    private Button btn_calcular_ruta_aceptar;
+    //private Button btn_calcular_ruta_aceptar;
     private Button btn_calcular_ruta_gps;
+    private Button btn_calcular_ruta_cancelar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,9 +141,11 @@ public class CampusActivity extends AppCompatActivity {
         calcular_ruta.setCancelable(true);
 
         text_calcular_ruta = (TextView) calcular_ruta.findViewById(R.id.text_calcular_ruta);
-        text_calcular_ruta.setText("¿Quieres calcular el camino mas corto hasta la unidad "+'"'+nombre+'"'+" ?");
+        text_calcular_ruta.setText(nombre);
 
-        btn_calcular_ruta_aceptar = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_aceptar);
+        //text_calcular_ruta.setText("¿Quieres calcular el camino mas corto hasta la unidad "+'"'+nombre+'"'+" ?");
+
+        /*btn_calcular_ruta_aceptar = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_aceptar);
         btn_calcular_ruta_aceptar.setTag(id);//a cada boton le agregas un tag
         btn_calcular_ruta_aceptar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,7 +163,7 @@ public class CampusActivity extends AppCompatActivity {
                 startActivity(intent);
                 calcular_ruta.dismiss();
             }
-        });
+        });*/
 
         btn_calcular_ruta_gps = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_gps);
         btn_calcular_ruta_gps.setTag(id);//a cada boton le agregas un tag
@@ -180,6 +183,14 @@ public class CampusActivity extends AppCompatActivity {
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
+                calcular_ruta.dismiss();
+            }
+        });
+
+        btn_calcular_ruta_cancelar = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_cancelar);
+        btn_calcular_ruta_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 calcular_ruta.dismiss();
             }
         });

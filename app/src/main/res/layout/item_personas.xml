@@ -18,11 +18,20 @@
 
     <TextView
         android:paddingTop="5dp"
-        android:paddingBottom="10dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:id="@+id/correo_persona"
         android:text="Correo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:id="@+id/unidad_persona"
+        android:text="Unidad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

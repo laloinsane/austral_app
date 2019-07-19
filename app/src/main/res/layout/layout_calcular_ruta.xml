@@ -14,28 +14,29 @@
             android:id="@+id/text_calcular_ruta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16dp"
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:textColor="#111111"/>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center">
 
             <Button
-                android:id="@+id/btn_calcular_ruta_aceptar"
+                android:id="@+id/btn_calcular_ruta_gps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Calcular"
+                android:text="Seleccionar"
                 android:textAllCaps="false"
                 android:layout_margin="5dp"/>
 
             <Button
-                android:id="@+id/btn_calcular_ruta_gps"
+                android:id="@+id/btn_calcular_ruta_cancelar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GPS"
+                android:text="Cancelar"
                 android:textAllCaps="false"
                 android:layout_margin="5dp"/>
 

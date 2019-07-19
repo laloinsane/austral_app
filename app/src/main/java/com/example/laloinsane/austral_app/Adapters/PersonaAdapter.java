@@ -24,8 +24,8 @@ public class PersonaAdapter extends RecyclerView.Adapter<PersonaAdapter.MyViewHo
     private Context context;
 
     private Dialog calcular_ruta;
-    private Button btn_calcular_ruta_aceptar;
     private Button btn_calcular_ruta_gps;
+    private Button btn_calcular_ruta_cancelar;
     private TextView text_calcular_ruta;
 
     private int campus;
@@ -51,6 +51,7 @@ public class PersonaAdapter extends RecyclerView.Adapter<PersonaAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.nombre_persona.setText(personas.get(position).getNombre_persona());
         holder.correo_persona.setText(personas.get(position).getCorreo_persona());
+        holder.unidad_persona.setText(personas.get(position).getNombre_unidad());
     }
 
     @Override
@@ -59,12 +60,13 @@ public class PersonaAdapter extends RecyclerView.Adapter<PersonaAdapter.MyViewHo
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView nombre_persona, correo_persona;
+        TextView nombre_persona, correo_persona, unidad_persona;
         public MyViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             nombre_persona = itemView.findViewById(R.id.nombre_persona);
             correo_persona = itemView.findViewById(R.id.correo_persona);
+            unidad_persona = itemView.findViewById(R.id.unidad_persona);
         }
 
         @Override
@@ -80,7 +82,10 @@ public class PersonaAdapter extends RecyclerView.Adapter<PersonaAdapter.MyViewHo
                 calcular_ruta.setCancelable(true);
 
                 text_calcular_ruta = (TextView) calcular_ruta.findViewById(R.id.text_calcular_ruta);
-                text_calcular_ruta.setText("¿Quieres calcular el camino mas corto hasta la unidad "+'"'+clickedDataItem.getNombre_persona()+'"'+" ?");
+                text_calcular_ruta.setText(clickedDataItem.getNombre_persona());
+
+
+                //text_calcular_ruta.setText("¿Quieres calcular el camino mas corto hasta la unidad "+'"'+clickedDataItem.getNombre_persona()+'"'+" ?");
 
                 btn_calcular_ruta_gps = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_gps);
                 //btn_calcular_ruta_gps.setTag(id);//a cada boton le agregas un tag
@@ -103,6 +108,13 @@ public class PersonaAdapter extends RecyclerView.Adapter<PersonaAdapter.MyViewHo
                     }
                 });
 
+                btn_calcular_ruta_cancelar = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_cancelar);
+                btn_calcular_ruta_cancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        calcular_ruta.dismiss();
+                    }
+                });
 
                 calcular_ruta.show();
 

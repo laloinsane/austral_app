@@ -14,7 +14,7 @@
             android:id="@+id/txt_busqueda"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Selecciona tu opcion de busqueda"
+            android:text="Selecciona tu opción de búsqueda"
             android:textSize="16dp"
             android:textColor="#111111"/>
 

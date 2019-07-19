@@ -3,6 +3,7 @@ package com.example.laloinsane.austral_app.Models;
 public class Persona {
     private int id_persona;
     private int id_unidad;
+    private String nombre_unidad;
     private String nombre_persona;
     private String primer_nombre_persona;
     private String segundo_nombre_persona;
@@ -10,7 +11,7 @@ public class Persona {
     private String segundo_apellido_persona;
     private String cargo_persona;
     private String correo_persona;
-    private String fono_persona;
+    private int fono_persona;
 
     public int getId_persona() {
         return id_persona;
@@ -26,6 +27,14 @@ public class Persona {
 
     public void setId_unidad(int id_unidad) {
         this.id_unidad = id_unidad;
+    }
+
+    public String getNombre_unidad() {
+        return nombre_unidad;
+    }
+
+    public void setNombre_unidad(String nombre_unidad) {
+        this.nombre_unidad = nombre_unidad;
     }
 
     public String getNombre_persona() {
@@ -84,11 +93,11 @@ public class Persona {
         this.correo_persona = correo_persona;
     }
 
-    public String getFono_persona() {
+    public int getFono_persona() {
         return fono_persona;
     }
 
-    public void setFono_persona(String fono_persona) {
+    public void setFono_persona(int fono_persona) {
         this.fono_persona = fono_persona;
     }
 }
