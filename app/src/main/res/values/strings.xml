@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Caminos Austral</string>
-    <string name="acerca_txt">Lorem ipsum dolor sit amet consectetur adipiscing elit sociis mus massa semper facilisi, nec ridiculus at dis purus orci viverra est et platea curabitur sed, placerat volutpat pharetra ut congue dictumst diam venenatis erat scelerisque tellus. Vulputate consequat sociosqu ut nulla aenean ad cubilia a scelerisque risus hac sociis, natoque non vestibulum ultrices aliquet dignissim libero mattis montes porta. Scelerisque inceptos netus vitae interdum ad etiam libero, parturient ullamcorper nascetur pharetra et arcu, id dictum cum cubilia eros elementum.
-        Ornare netus penatibus pharetra vulputate mattis platea ligula tortor, bibendum leo porta nulla dignissim vivamus lobortis lacus aenean, inceptos vitae cubilia tempor arcu dapibus interdum. Mollis porttitor class nisi potenti senectus tempor penatibus maecenas eros ad, vivamus conubia auctor in lacinia per non duis magnis. Ultrices laoreet auctor dictum vel augue, neque massa dis per torquent, class tellus pulvinar hac.</string>
+    <string name="acerca_txt">"Caminos Austral", Aplicación móvil para la ubicación dentro de la Universidad Austral de Chile Sede Puerto Montt.</string>
 </resources>
