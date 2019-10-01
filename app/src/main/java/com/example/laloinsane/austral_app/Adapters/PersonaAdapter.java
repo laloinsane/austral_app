@@ -10,10 +10,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.laloinsane.austral_app.Models.Persona;
-import com.example.laloinsane.austral_app.PersonasActivity;
 import com.example.laloinsane.austral_app.R;
 import com.example.laloinsane.austral_app.RutaGpsActivity;
 
@@ -84,17 +82,11 @@ public class PersonaAdapter extends RecyclerView.Adapter<PersonaAdapter.MyViewHo
                 text_calcular_ruta = (TextView) calcular_ruta.findViewById(R.id.text_calcular_ruta);
                 text_calcular_ruta.setText(clickedDataItem.getNombre_persona());
 
-
-                //text_calcular_ruta.setText("¿Quieres calcular el camino mas corto hasta la unidad "+'"'+clickedDataItem.getNombre_persona()+'"'+" ?");
-
                 btn_calcular_ruta_gps = (Button) calcular_ruta.findViewById(R.id.btn_calcular_ruta_gps);
-                //btn_calcular_ruta_gps.setTag(id);//a cada boton le agregas un tag
                 btn_calcular_ruta_gps.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent=new Intent(context, RutaGpsActivity.class);
-
-                        //int valor = (Integer) view.getTag();//tomas el tag asignado
 
                         //Traspaso de datos al CampusActivity
                         intent.putExtra("campus_gps", campus);
@@ -120,19 +112,6 @@ public class PersonaAdapter extends RecyclerView.Adapter<PersonaAdapter.MyViewHo
                 });
 
                 calcular_ruta.show();
-
-                //Campus clickedDataItem = dataset.get(pos);
-                //Intent intent = new Intent(context, PersonasActivity.class);
-
-                //Traspaso de datos al CampusActivity
-                /*intent.putExtra("campus_id",clickedDataItem.getId_campus());
-                intent.putExtra("campus_name",clickedDataItem.getNombre_campus());
-                intent.putExtra("latitud",clickedDataItem.getLatitud_campus());
-                intent.putExtra("longitud",clickedDataItem.getLongitud_campus());*/
-
-                /*intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-                Toast.makeText(v.getContext(), "You clicked " + clickedDataItem.getNombre_persona(), Toast.LENGTH_SHORT).show();*/
             }
         }
     }
