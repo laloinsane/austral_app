@@ -21,9 +21,7 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -31,7 +29,6 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 import java.util.List;
 
-import nose.Nodo;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -106,6 +103,7 @@ public class RutaGpsActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<UnidadNodos> call, Response<UnidadNodos> response) {
                 if (response.isSuccessful()) {
                     UnidadNodos apiRespuesta = response.body();
+
                     ArrayList<Conexion> datos = apiRespuesta.getConexiones();
                     ArrayList<com.example.laloinsane.austral_app.Models.Nodo> datos_nodos = apiRespuesta.getNodos();
                     List<dijkstra.Nodo> lista_nodos_ejemplo = new ArrayList<dijkstra.Nodo>();
