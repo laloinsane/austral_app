@@ -106,37 +106,36 @@ public class RutaGpsActivity extends AppCompatActivity implements View.OnClickLi
 
                     ArrayList<Conexion> datos = apiRespuesta.getConexiones();
                     ArrayList<com.example.laloinsane.austral_app.Models.Nodo> datos_nodos = apiRespuesta.getNodos();
-                    List<dijkstra.Nodo> lista_nodos_ejemplo = new ArrayList<dijkstra.Nodo>();
 
-                    //List<Nodo> lista_nodos_ejemplo = new ArrayList<nose.Nodo>();
+                    //dijkstra library
+                    List<dijkstra.Nodo> lista_nodos_ejemplo = new ArrayList<dijkstra.Nodo>();
 
                     int nodo_origen = 0;
                     double distancia_origen = 0;
 
                     for (com.example.laloinsane.austral_app.Models.Nodo nodo : datos_nodos) {
+                        //dijkstra library
                         ArrayList<dijkstra.Conexion> conexion_nueva = new ArrayList<dijkstra.Conexion>();
-                        //ArrayList<nose.Conexion> conexion_nueva = new ArrayList<nose.Conexion>();
+
                         List<Conexion> con = nodo.getConexiones();
                         if (con.size() != 0) {
                             for (Conexion co : con) {
+                                //dijkstra library
                                 dijkstra.Conexion n_c = new dijkstra.Conexion(co.getDestino(), co.getDistancia());
-                                //nose.Conexion n_c = new nose.Conexion(co.getDestino(), co.getDistancia());
                                 conexion_nueva.add(n_c);
                             }
                         }
-
+                        //dijkstra library
                         dijkstra.Nodo nodo_nuevo = new dijkstra.Nodo(nodo.getId_nodo(), nodo.getId_campus(), nodo.getLatitud_nodo(), nodo.getLongitud_nodo(), conexion_nueva);
                         lista_nodos_ejemplo.add(nodo_nuevo);
 
-                        //nose.Nodo nodo_nuevo = new nose.Nodo(nodo.getId_nodo(), nodo.getId_campus(), nodo.getLatitud_nodo(), nodo.getLongitud_nodo(), conexion_nueva);
-                        //lista_nodos_ejemplo.add(nodo_nuevo);
                     }
-
+                    //dijkstra library
                     dijkstra.Vertice[] vertices = new dijkstra.Vertice[lista_nodos_ejemplo.size()];
-                    //nose.Vertice[] vertices = new nose.Vertice[lista_nodos_ejemplo.size()];
+
                     for (int i = 0; i < vertices.length; i++) {
+                        //dijkstra library
                         vertices[i] = new dijkstra.Vertice(lista_nodos_ejemplo.get(i).getId_nodo());
-                        //vertices[i] = new nose.Vertice(lista_nodos_ejemplo.get(i).getId_nodo());
 
                         Haversine jue = new Haversine(6371);
                         double distancia = jue.CalculationByDistance(mLocationOverlay.getMyLocationProvider().getLastKnownLocation().getLatitude(), mLocationOverlay.getMyLocationProvider().getLastKnownLocation().getLongitude(), lista_nodos_ejemplo.get(i).getLatitud_nodo(), lista_nodos_ejemplo.get(i).getLongitud_nodo());
@@ -150,9 +149,9 @@ public class RutaGpsActivity extends AppCompatActivity implements View.OnClickLi
                                 distancia_origen = distancia;
                             }
                         }
-
+                        //dijkstra library
                         List<dijkstra.Conexion> con = lista_nodos_ejemplo.get(i).getConexiones();
-                        //List<nose.Conexion> con = lista_nodos_ejemplo.get(i).getConexiones();
+
                         for (int x = 0; x < con.size(); x++) {
                             vertices[i].add_arista(lista_nodos_ejemplo.get(i).getId_nodo(), con.get(x).getDestino(), con.get(x).getDistancia());
                         }
@@ -164,8 +163,9 @@ public class RutaGpsActivity extends AppCompatActivity implements View.OnClickLi
                             boolean is_empty = false;
                             double distancia = 0;
 
+                            //dijkstra library
                             ArrayList<dijkstra.Arista> arr = vertices[i].getAristas();
-                            //ArrayList<nose.Arista> arr = vertices[i].getAristas();
+
                             for (int x = 0; x < arr.size(); x++) {
                                 if (vertices[j].getId_vertice() == arr.get(x).getId_vertice_destino()) {
                                     is_empty = true;
@@ -179,11 +179,9 @@ public class RutaGpsActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         }
                     }
-
+                    //dijkstra library
                     dijkstra.Grafo b = new dijkstra.Grafo(vertices, matriz_adyacencia);
                     dijkstra.Direccion hol = b.camino_mas_corto(nodo_origen, datos.get(0).getDestino());
-                    //nose.Grafo b = new nose.Grafo(vertices, matriz_adyacencia);
-                    //nose.direccion hol = b.camino_mas_corto(nodo_origen, datos.get(0).getDestino());
 
                     ArrayList<Integer> ruta = hol.getRuta();
 

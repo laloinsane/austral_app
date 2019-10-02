@@ -39,5 +39,4 @@ dependencies {
 
     //import external jar
     implementation files('libs/dijkstra.jar')
-    implementation files('libs/test-app.jar')
 }
