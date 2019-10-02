@@ -72,10 +72,8 @@ public class RutaGpsActivity extends AppCompatActivity implements View.OnClickLi
         //osmdroid
         map = (MapView) findViewById(R.id.map_ruta_gps);
         map.setTileSource(TileSourceFactory.MAPNIK);
-        //osmdroid
         IMapController mapController = map.getController();
         mapController.setZoom(17.5);
-        //osmdroid
         GeoPoint startPoint = new GeoPoint(extras.getDouble("latitud_gps"), extras.getDouble("longitud_gps"));
         mapController.setCenter(startPoint);
 
